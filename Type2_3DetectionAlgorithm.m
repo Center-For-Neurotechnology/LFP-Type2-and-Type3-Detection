@@ -4,14 +4,14 @@
 % by Paulk et al., located at https://www.biorxiv.org/content/10.1101/770743v1
 
 % The criteria for detecting Type 2 and 3 events are as follows:
-% 1) absolute waveforms were detected which were >25 µV in amplitude with a
+% 1) absolute waveforms were detected which were >25 ÂµV in amplitude with a
 % series of steps to clean the waveforms and remove noise
 % 2) detected waveforms had a correlation above 0.8 with a template event
 % waveform
 % 3) the second derivative at the onset of the recording was greater
 % than 2
 % 4) the voltage in the 100 ms preceding the event onset is less
-% than 25 µV to reduce the chances of capturing oscillations
+% than 25 ÂµV to reduce the chances of capturing oscillations
 
 %% Input data:
 % LFP data should be in the form of channel x sample,
@@ -20,7 +20,7 @@
 % detection (generally channels within good impedance ranges)
 
 %% Thresholding to detect peaks in the LFP
-% First, we detect peaks larger than 25 µV and take -250 ms and 500 ms
+% First, we detect peaks larger than 25 ÂµV and take -250 ms and 500 ms
 % snippets of data around each event per channel (at ch).
 
 datalfp=ChanData(ChannelNum(ch),:) ;
@@ -128,17 +128,7 @@ WaveAllPat=[ fi*ones(size(VarG,1),1) repmat([TimeBrev(1) TimeMax TimeCold(end,:)
 
 %% Correlating the template waveforms to the waveform snippets
 % Loading the waves determined from PCA and kmeans approaches
-load(['N:\PEDOTPtNRData\TimingAlignments\CorValTimeTimingWave',num2str(2)],'MeanVar3','MeanVar2','MeanVar')
-
-Type2WaveA=MeanVar;
-Type2WaveB=MeanVar2;
-Type3Wave=MeanVar3;
-
-save(['N:\PEDOTPtNRData\TimingAlignments\Type2Type3WaveformTemplates'],'Type2WaveA','Type2WaveB','Type3Wave')
-
-Type2WaveA=MeanVar;
-Type2WaveB=MeanVar2;
-Type3Wave=MeanVar3;
+load(['D:\Dropbox\ACPProjects\PtNRElectrodes\PEDOTZooPaper\WaveformsUnits\Type2Type3WaveformTemplates'],'Type2WaveA','Type2WaveB','Type3Wave')
 
 % Multiply by 100 microvolts to get the waveforms to a similar scale
 multTimes=[100];
@@ -152,14 +142,14 @@ Type3Wave=Type3Wave/max(Type3Wave);
 HR=[];PR=[];HR2=[];PR2=[];HR3=[];PR3=[];
 for smsn=1:size(WaveAllPat,1)
     [rho,p]=corr(multTimes*Type2WaveA',WaveAllPat(smsn,valstep:end)');
-    HR(smsn,ampstep)=rho;
-    PR(smsn,ampstep)=p;
+    HR(smsn)=rho;
+    PR(smsn)=p;
     [rho,p]=corr(multTimes*Type2WaveB',WaveAllPat(smsn,valstep:end)');
-    HR2(smsn,ampstep)=rho;
-    PR2(smsn,ampstep)=p;
+    HR2(smsn)=rho;
+    PR2(smsn)=p;
     [rho,p]=corr(multTimes*Type3Wave',WaveAllPat(smsn,valstep:end)');
-    HR3(smsn,ampstep)=rho;
-    PR3(smsn,ampstep)=p;
+    HR3(smsn)=rho;
+    PR3(smsn)=p;
     smsn
 end
 
@@ -171,14 +161,6 @@ if isempty(dir1)==0
     CorrSharp2=HR2';
     CorrSharp3=HR3';
     SharpWave=WaveAllPat;
-    MaxVsharp=MAXV;
-    MovementTimesONOFFSharp=MovementTimesONOFF;
-    Class2fast=MeanVar;
-    Class3fast=MeanVar2;
-    Class4fast=MeanVar3;
-    % Class2faststd=StdVar;
-    % Class3faststd=StdVar2;
-    % Class4faststd=StdVar3;
 end
 dir2=dir([DirSaveAllp,PatName,'_',num2str(fi),'_CorMultipleTimeTimingLatestWave_32*']);
 if isempty(dir2)==0
@@ -187,14 +169,6 @@ if isempty(dir2)==0
     CorrSlow2=HR2';
     CorrSlow3=HR3';
     SlowWave=WaveAllPat;
-    MaxVslow=MAXV;
-    MovementTimesONOFFSlow=MovementTimesONOFF;
-    Class2slow=MeanVar;
-    Class3slow=MeanVar2; %same as Class 3
-    Class4slow=MeanVar3;
-    % Class2slowstd=StdVar;
-    % Class3slowstd=StdVar2;
-    % Class4slowstd=StdVar3;
 end
 dir3=dir([DirSaveAllp,PatName,'_',num2str(fi),'_CorMultipleTimeTimingWaveLatestSub_3',num2str(3),'*']);
 if isempty(dir3)==0
@@ -206,52 +180,34 @@ if isempty(dir3)==0
     CorrCL32=HR2P';
     CorrCL33=HR3P';
     CL3Wave=WAP;
-    MaxVCL3=MAXP';
-    MovementTimesONOFFSlow=MovementTimesONOFF;
-    Class2slow=MeanVar;
-    Class3slow=MeanVar2; %same as Class 3
-    Class4slow=MeanVar3;
-    % Class2slowstd=StdVar;
-    % Class3slowstd=StdVar2;
-    % Class4slowstd=StdVar3;
 end
 
 AllWave=[zeros(size(SlowWave,1),1) SlowWave;ones(size(SharpWave,1),1) SharpWave;2*ones(size(CL3Wave,1),1) CL3Wave];
 AllHRClass2=[zeros(size(SlowWave,1),1) CorrSlow1';ones(size(SharpWave,1),1) CorrSharp1';2*ones(size(CL3Wave,1),1) CorrCL31'];
 AllHRClass3=[zeros(size(SlowWave,1),1) CorrSlow2';ones(size(SharpWave,1),1) CorrSharp2';2*ones(size(CL3Wave,1),1) CorrCL32'];
 AllHRClass4=[zeros(size(SlowWave,1),1) CorrSlow3';ones(size(SharpWave,1),1) CorrSharp3';2*ones(size(CL3Wave,1),1) CorrCL33'];
-AllMaxV=[zeros(size(SlowWave,1),1) MaxVslow';ones(size(SharpWave,1),1) MaxVsharp';2*ones(size(CL3Wave,1),1) MaxVCL3'];
 
 AllHRClassCorr=[AllHRClass2 AllHRClass3 AllHRClass4];
 AllHRClassCorr1=AllHRClassCorr;
-%             if fi==25
+
 AllWave=AllWave(abs(AllHRClassCorr1(:,2))>.8 | abs(AllHRClassCorr1(:,4))>.8 | abs(AllHRClassCorr1(:,6))>.8,:);
-AllMaxV=AllMaxV(abs(AllHRClassCorr1(:,2))>.8 | abs(AllHRClassCorr1(:,4))>.8 | abs(AllHRClassCorr1(:,6))>.8,:);
 AllHRClassCorr=AllHRClassCorr(abs(AllHRClassCorr1(:,2))>.8 | abs(AllHRClassCorr1(:,4))>.8 | abs(AllHRClassCorr1(:,6))>.8,:);
-%             end
-
-Class2slow=MeanVar;
-Class3slow=MeanVar2; %same as Class 3
-Class4slow=MeanVar3;
-
 
 ValMxAll=[];
 AllWavePer=AllWave(AllWave(:,2)==fi & AllWave(:,12)==cha,:);
 AllWavePerFind=find(AllWave(:,2)==fi & AllWave(:,12)==cha);
 AllHRClassCorrPer=AllHRClassCorr(AllWave(:,2)==fi & AllWave(:,12)==cha,:);
-AllHRMax=AllMaxV(AllWave(:,2)==fi & AllWave(:,12)==cha,:);
+
 if isempty(AllWavePer)==0
     [GR,ID]=grp2idx(AllWavePer(:,9));
     ID=str2num(char(ID));
     
     for ksn=1:length(ID)
-        
         ZI=AllHRClassCorrPer(AllWavePer(:,9)==ID(ksn),:);
         if isempty(ZI)==0
-            
             ZIWave=AllWavePer(AllWavePer(:,9)==ID(ksn),:);
             FIZi=AllWavePerFind(AllWavePer(:,9)==ID(ksn));
-            ZIAllHRMax=AllHRMax(AllWavePer(:,9)==ID(ksn),:);
+
             if size(ZI,1)==3
                 ValMx=[ZI(1,:) FIZi(1) ZI(2,:) FIZi(2) ZI(3,:) FIZi(3)];
             elseif size(ZI,1)==2
@@ -261,28 +217,20 @@ if isempty(AllWavePer)==0
             else
                 pause
             end
-            ValMxAll=[ValMxAll;repmat([fi cha],size(ValMx,1),1) ValMx ZIAllHRMax(1)];
-            %                 pause
-            %             ksn
+            ValMxAll=[ValMxAll;repmat([fi cha],size(ValMx,1),1) ValMx ];
         end
     end
     cha
 end
-fi
-save([DirSaveAllp,PatName,'_',num2str(fi),'AllDataWavesTogether'],'AllWave',...
-    'AllHRClassCorr','AllMaxV','AllHRClass3','AllHRClass4','AllHRClass2')
-save([DirSaveAllp,PatName,'_',num2str(fi),'ValMxAll_3'],'ValMxAll')
-%%
-% load('D:\PEDOT\TimingAlignments\ValMxAll.mat')
-load([DirSaveAllp,PatName,'_',num2str(fi),'ValMxAll_3'])
+
+% Since the waveform snippets can be varyingly be correlated with
+% the Type 2 and Type 3 waveforms, this step is to identify which
+% template waveforms had the highest correlation to each snippet
 Categories=[];
 for cs=1:size(ValMxAll,1)
     NF=abs(ValMxAll(cs,[4:2:8 11:2:15 18:2:22]));
     NFInd=abs(ValMxAll(cs,[3:2:7 10:2:14 17:2:21]));
-    %     NF
-    %     [mx,PerInd]=max(NF);
-    %     PerInd
-    %     pause
+
     NF(isnan(NF)==1)=0;
     [mx,PerInd]=max(NF);
     DiffPerInd=0;
@@ -294,23 +242,21 @@ for cs=1:size(ValMxAll,1)
         DiffPerInd=2;
     end
     
-    if mx==1
-        pause
-    end
     vl=[4:2:8 11:2:15 18:2:22];
     Categories(cs,:)=[PerInd DiffPerInd mx ValMxAll(cs,vl(PerInd))];
 end
-%%
-CategoriesSub=Categories;
 
-save([DirSaveAllp,PatName,'_',num2str(fi),'CategoriesSuball3'],'CategoriesSub','Categories')
+% Matrix the same size as the waveform snippet with the first column
+% indicating which type of waveform the snippet is correlated with for that
+% snippet.
+CategoriesSub=Categories;
 
 %% Detecting fast deflections at the onset of the waveforms and removing slow onset changes
 % Finally, as a step to remove the possibility of including ongoing
 % oscillatory waveforms, we keep only waveforms which:
-% 1. Have a large second derivative at ± 50 ms around the
+% 1. Have a large second derivative at Â± 50 ms around the
 % onset of the waveform
-% 2. Keep waveforms with average absolute voltages < 25 µV in the
+% 2. Keep waveforms with average absolute voltages < 25 ÂµV in the
 % preceding 100 ms before the event onset.
 
 % Correlation threshold variable where the correlation with the template
