@@ -4,14 +4,14 @@
 % by Paulk et al., located at https://www.biorxiv.org/content/10.1101/770743v1
 
 % The criteria for detecting Type 2 and 3 events are as follows:
-% 1) absolute waveforms were detected which were >25 µV in amplitude with a
+% 1) absolute waveforms were detected which were >25 ÂµV in amplitude with a
 % series of steps to clean the waveforms and remove noise
 % 2) detected waveforms had a correlation above 0.8 with a template event
 % waveform
 % 3) the second derivative at the onset of the recording was greater
 % than 2
 % 4) the voltage in the 100 ms preceding the event onset is less
-% than 25 µV to reduce the chances of capturing oscillations
+% than 25 ÂµV to reduce the chances of capturing oscillations
 
 %% Input data:
 % LFP data should be in the form of channel x sample,
@@ -21,9 +21,9 @@
 % example, only a single channel is used.
 
 %% Thresholding to detect peaks in the LFP
-% First, we detect peaks larger than 25 ÂµV and take -250 ms and 500 ms
+% First, we detect peaks larger than 25 Ã‚ÂµV and take -250 ms and 500 ms
 % snippets of data around each event per channel (at ch).
-MainDirectory='D:\Dropbox\ACPProjects\PtNRElectrodes\PEDOTPtNR\LFP-Type2-and-Type3-Detection-master\';
+MainDirectory='\YourDirectory\LFP-Type2-and-Type3-Detection-master\';
 
 %Example data from a single channel 
 load([MainDirectory,'Examp'],'datalfp','DecFS')
@@ -205,9 +205,9 @@ end
 %% Detecting fast deflections at the onset of the waveforms and removing slow onset changes
 % Finally, as a step to remove the possibility of including ongoing
 % oscillatory waveforms, we keep only waveforms which:
-% 1. Have a large second derivative at ± 50 ms around the
+% 1. Have a large second derivative at Â± 50 ms around the
 % onset of the waveform
-% 2. Keep waveforms with average absolute voltages < 25 µV in the
+% 2. Keep waveforms with average absolute voltages < 25 ÂµV in the
 % preceding 100 ms before the event onset.
 
 % Correlation threshold variable where the correlation with the template
