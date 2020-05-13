@@ -9,7 +9,7 @@ The criteria for detecting Type 2 and 3 events are as follows:
 
 The example .m file includes comments and step-by-step process of detecting the waveforms, cleaning the waveforms, correlating them to the templates, and finally plotting the waveforms.  
 
-The code is currently written for a single channel of LFP input.
+The MATLAB code is currently written for a single channel of LFP input. It was tested in MATLAB 2019a and 2016b.
 
 Example data is included (ExampleData.zip) in a .mat file (Examp.mat), with the variables datalfp and sampling rate (DecFS)
 
