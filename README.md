@@ -9,7 +9,7 @@ The criteria for detecting Type 2 and 3 events are as follows:
 
 The example .m file includes comments and step-by-step process of detecting the waveforms, cleaning the waveforms, correlating them to the templates, and finally plotting the waveforms.  
 
-To use, download the example data, the template files, and the code (Type2_3DetectionAlgorithm.m and spike_times.m) and change the below in 'Type2_3DetectionAlgorithm.m' to the directory where the data and code are located:
+To use, download the example ,mat data, the template .mat file, and the code (Type2_3DetectionAlgorithm.m and spike_times.m) and change the below in 'Type2_3DetectionAlgorithm.m' to the directory where the data and code are located:
 MainDirectory='\YourDirectory\LFP-Type2-and-Type3-Detection-master\';
 
 The MATLAB code is currently written for a single channel of LFP input. It was tested in MATLAB 2019a and 2016b.
